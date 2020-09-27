@@ -15,13 +15,26 @@ const styles = StyleSheet.create({
 export function QuestionList() {
   const [qIndex, setQIndex] = useState(0);
 
+  function gotoNextQuestion() {
+    if (qIndex === QUESTIONS.length - 1) {
+      return;
+    }
+
+    setQIndex((i) => i + 1);
+  }
+
   return (
     <View style={styles.container}>
-      <QuestionItem qIndex={qIndex} question={QUESTIONS[qIndex]} />
-      <Button
-        icon="arrow-right"
-        mode="contained"
-        onPress={() => setQIndex((i) => i + 1)}>
+      <QuestionItem
+        qIndex={qIndex}
+        question={QUESTIONS[qIndex]}
+        onTimerEnd={(t1, t2) => {
+          if (t1 === 0 || t2 === 0) {
+            gotoNextQuestion();
+          }
+        }}
+      />
+      <Button icon="arrow-right" mode="contained" onPress={gotoNextQuestion}>
         Next
       </Button>
     </View>
