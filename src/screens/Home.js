@@ -1,15 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import {Title} from 'react-native-paper';
-
-import {AppBar} from '../components';
+import {AppBar, QuestionList} from '../components';
 
 export function Home() {
   return (
     <View>
       <AppBar title="AMCI App" />
-      <Title>Home Page</Title>
+      <QuestionList />
     </View>
   );
 }
