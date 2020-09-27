@@ -2,9 +2,22 @@ import {useState, useEffect} from 'react';
 
 export function useTimer(seconds, enabled = true) {
   const [timeLeft, setTimeLeft] = useState(seconds);
+  const [paused, setPaused] = useState(false);
+
+  function reset() {
+    setTimeLeft(seconds);
+  }
+
+  function pause() {
+    setPaused(true);
+  }
+
+  function resume() {
+    setPaused(false);
+  }
 
   useEffect(() => {
-    if (!(timeLeft && enabled)) {
+    if (!(timeLeft && enabled) && !paused) {
       return;
     }
 
@@ -13,9 +26,12 @@ export function useTimer(seconds, enabled = true) {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [timeLeft, enabled]);
+  }, [timeLeft, enabled, paused]);
 
   return {
-    timeLeft: `${timeLeft > 9 ? timeLeft : `0${timeLeft}`}`,
+    timeLeft,
+    reset,
+    pause,
+    resume,
   };
 }
