@@ -8,6 +8,7 @@ target 'amciapp' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+
   target 'amciappTests' do
     inherit! :complete
     # Pods for testing
