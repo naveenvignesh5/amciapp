@@ -49,6 +49,7 @@ export function QuestionItem({questions}) {
                 title={ch}
                 right={(props) => (
                   <RadioButton.Android
+                    disabled={!!choice}
                     value={ch}
                     status={isChecked ? 'checked' : 'unchecked'}
                     onPress={() => handleChoiceSelect(ch)}
