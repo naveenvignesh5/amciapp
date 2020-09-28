@@ -1,16 +1,15 @@
 import React, {useMemo} from 'react';
 import {Card, Title, Paragraph} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import {QUESTIONS} from '../../mock/data';
 
-export function ResultCard() {
+export function ResultCard({questions}) {
   const answers = useSelector((state) => state.question.answers);
 
   const correct = useMemo(
     function () {
       let count = 0;
 
-      QUESTIONS.forEach(function (q, qIndex) {
+      questions.forEach(function (q, qIndex) {
         if (q.answer === answers[qIndex]) {
           count += 1;
         }
@@ -18,7 +17,7 @@ export function ResultCard() {
 
       return count;
     },
-    [answers],
+    [answers, questions],
   );
 
   return (

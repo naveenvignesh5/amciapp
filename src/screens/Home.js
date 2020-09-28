@@ -33,7 +33,7 @@ export function Home() {
   return (
     <View>
       <AppBar title="AMCI App" />
-      {data && <QuestionList />}
+      {data && <QuestionList questions={data} />}
     </View>
   );
 }
