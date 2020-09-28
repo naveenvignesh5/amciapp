@@ -91,3 +91,11 @@ export const QUESTIONS = [
   //   answer: 'Both 1 and 2',
   // },
 ];
+
+export function fetchQuestionsApi() {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      resolve(QUESTIONS);
+    }, 2000); // simulate delay
+  });
+}
