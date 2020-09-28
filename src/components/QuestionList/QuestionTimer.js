@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Chip, Text} from 'react-native-paper';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {useTimer} from '../../hooks';
-import {updateQuestion} from '../../redux';
+import {updateQuestion, completeTest} from '../../redux';
 
 const styles = StyleSheet.create({
   timerContainer: {
@@ -25,18 +25,45 @@ const styles = StyleSheet.create({
 const QUESTION_DURATION = 60; // seconds
 const TRANSITION_DURATION = 5; // seconds
 
-export function QuestionTimer({qIndex, enableTransition}) {
+export function QuestionTimer({questions}) {
   const dispatch = useDispatch();
+
+  const answers = useSelector((state) => state.question.answers);
+  const qIndex = useSelector((state) => state.question.qIndex);
+
+  const enableTransition = !!answers[qIndex];
 
   const questionTimer = useTimer(QUESTION_DURATION);
   const transitionTimer = useTimer(
     TRANSITION_DURATION,
-    enableTransition && questionTimer > TRANSITION_DURATION,
+    enableTransition && questionTimer.timeLeft > TRANSITION_DURATION,
   );
 
-  if (questionTimer.timeLeft === 0 || transitionTimer.timeLeft === 0) {
-    dispatch(updateQuestion(qIndex + 1));
-  }
+  useEffect(
+    function () {
+      const nextQIndex = qIndex + 1;
+
+      if (questionTimer.timeLeft > 0 && transitionTimer.timeLeft > 0) {
+        return;
+      }
+
+      if (questionTimer.timeLeft === 0) {
+        questionTimer.reset();
+      }
+
+      if (transitionTimer.timeLeft === 0) {
+        transitionTimer.reset();
+      }
+
+      if (nextQIndex === questions.length) {
+        dispatch(completeTest());
+        return;
+      }
+
+      dispatch(updateQuestion(qIndex + 1));
+    },
+    [questionTimer, transitionTimer, qIndex, questions, dispatch],
+  );
 
   return (
     <View style={styles.timerContainer}>
@@ -46,6 +73,7 @@ export function QuestionTimer({qIndex, enableTransition}) {
           <Text style={styles.timerText}>{transitionTimer.timeLeft}</Text>
         </Chip>
       )}
+      {/* <BaseTimer {...questionTimer} /> */}
       <Chip style={styles.questionTimer} icon="clock">
         Time Left:{' '}
         <Text style={styles.timerText}>{questionTimer.timeLeft}</Text>

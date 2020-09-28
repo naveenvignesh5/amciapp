@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Button} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {retakeTest, updateQuestion} from '../../redux';
+import {completeTest, retakeTest, updateQuestion} from '../../redux';
 
 import {QuestionItem} from './QuestionItem';
-// import {QuestionTimer} from './QuestionTimer';
+import {QuestionTimer} from './QuestionTimer';
 import {ResultCard} from '../ResultCard';
 
 const styles = StyleSheet.create({
@@ -15,26 +15,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export function QuestionList({questions}) {
+function QuestionControl({questions}) {
   const dispatch = useDispatch();
 
-  const [done, setDone] = useState(false);
-
   const qIndex = useSelector((state) => state.question.qIndex);
-
-  function handleRetake() {
-    dispatch(retakeTest());
-    setDone(false);
-  }
-
-  if (done) {
-    return (
-      <View style={styles.container}>
-        <ResultCard questions={questions} />
-        <Button onPress={handleRetake}>Re-take test</Button>
-      </View>
-    );
-  }
 
   const finalQIndex = questions.length - 1;
 
@@ -47,22 +31,43 @@ export function QuestionList({questions}) {
   }
 
   return (
+    <>
+      {qIndex !== finalQIndex ? (
+        <Button icon="arrow-right" mode="contained" onPress={gotoNextQuestion}>
+          Next
+        </Button>
+      ) : (
+        <Button onPress={() => dispatch(completeTest())} mode="contained">
+          Done
+        </Button>
+      )}
+    </>
+  );
+}
+
+export function QuestionList({questions}) {
+  const dispatch = useDispatch();
+
+  const done = useSelector((state) => state.question.done);
+
+  function handleRetake() {
+    dispatch(retakeTest());
+  }
+
+  if (done) {
+    return (
+      <View style={styles.container}>
+        <ResultCard questions={questions} />
+        <Button onPress={handleRetake}>Re-take test</Button>
+      </View>
+    );
+  }
+
+  return (
     <View style={styles.container}>
-      <QuestionItem qIndex={qIndex} question={questions[qIndex]} />
-      <>
-        {qIndex !== finalQIndex ? (
-          <Button
-            icon="arrow-right"
-            mode="contained"
-            onPress={gotoNextQuestion}>
-            Next
-          </Button>
-        ) : (
-          <Button onPress={() => setDone(true)} mode="contained">
-            Done
-          </Button>
-        )}
-      </>
+      <QuestionTimer questions={questions} />
+      <QuestionItem questions={questions} />
+      <QuestionControl questions={questions} />
     </View>
   );
 }

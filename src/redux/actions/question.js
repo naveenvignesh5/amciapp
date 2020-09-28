@@ -20,3 +20,9 @@ export function retakeTest() {
     type: ACTIONS.RETAKE_TEST,
   };
 }
+
+export function completeTest() {
+  return {
+    type: ACTIONS.COMPLETE_TEST,
+  };
+}

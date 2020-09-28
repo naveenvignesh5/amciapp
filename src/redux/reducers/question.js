@@ -4,6 +4,7 @@ const initialState = {
   qIndex: 0,
   questions: [],
   answers: [],
+  done: false,
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +15,8 @@ export default function (state = initialState, action) {
       const answers = [...state.answers];
       answers[action.qIndex] = action.choice;
       return {...state, answers};
+    case ACTIONS.COMPLETE_TEST:
+      return {...state, done: true};
     case ACTIONS.RETAKE_TEST:
       return initialState;
     default:

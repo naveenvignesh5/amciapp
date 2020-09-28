@@ -11,10 +11,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export function QuestionItem({question, qIndex}) {
+export function QuestionItem({questions}) {
   const dispatch = useDispatch();
 
   const answers = useSelector((state) => state.question.answers);
+  const qIndex = useSelector((state) => state.question.qIndex);
 
   const [choice, setChoice] = useState('');
 
@@ -29,6 +30,8 @@ export function QuestionItem({question, qIndex}) {
     },
     [qIndex, answers],
   );
+
+  const question = questions[qIndex];
 
   return (
     <Card key={`question-${qIndex}`}>
