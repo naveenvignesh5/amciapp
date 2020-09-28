@@ -61,11 +61,13 @@ export function QuestionTimer({questions}) {
     [qIndex, questionTimer, transitionTimer, questions, dispatch],
   );
 
+  const isLast = qIndex === questions.length - 1;
+
   return (
     <View style={styles.timerContainer}>
       {enableTransition && (
         <Chip>
-          Next Question in{' '}
+          {!isLast ? 'Next Question in' : 'Test Ends in'}{' '}
           <Text style={styles.timerText}>{transitionTimer.timeLeft}</Text>
         </Chip>
       )}
