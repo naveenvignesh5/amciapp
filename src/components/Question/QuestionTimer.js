@@ -43,17 +43,13 @@ export function QuestionTimer({questions}) {
     function () {
       const nextQIndex = qIndex + 1;
 
-      if (questionTimer.timeLeft > 0 && transitionTimer.timeLeft > 0) {
+      if (!(questionTimer.timeLeft === 0 || transitionTimer.timeLeft === 0)) {
         return;
       }
 
-      if (questionTimer.timeLeft === 0) {
-        questionTimer.reset();
-      }
-
-      if (transitionTimer.timeLeft === 0) {
-        transitionTimer.reset();
-      }
+      // reset the timer
+      questionTimer.reset();
+      transitionTimer.reset();
 
       if (nextQIndex === questions.length) {
         dispatch(completeTest());
@@ -62,7 +58,7 @@ export function QuestionTimer({questions}) {
 
       dispatch(updateQuestion(qIndex + 1));
     },
-    [questionTimer, transitionTimer, qIndex, questions, dispatch],
+    [qIndex, questionTimer, transitionTimer, questions, dispatch],
   );
 
   return (
